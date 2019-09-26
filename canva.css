@@ -1,0 +1,11 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+#cansdiv{
+    border:1px solid red;
+    /* width:8px; */
+    height:100vh;
+    /* border-radius:50%; */
+}

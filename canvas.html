@@ -6,11 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Canvas_draw</title>
+    <link rel="stylesheet" type="text/css" href="canva.css" />
 </head>
 
 <body>
+    <div id="cansdiv"></div>
     <script type="text/javascript">
-
+        cansdiv.onmousemove = (e) => {
+            let wx = e.clientX - 5;
+            let wy = e.clientY - 5;
+            let divc = document.createElement('div');
+            divc.style.position = 'absolute';
+            divc.style.left = wx + 'px';
+            divc.style.top = wy + 'px';
+            divc.style.width = '10px';
+            divc.style.height = '10px';
+            divc.style.border = '1px solid red';
+            cansdiv.appendChild(divc);
+        }
     </script>
 </body>
 
