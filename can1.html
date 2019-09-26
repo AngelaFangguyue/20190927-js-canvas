@@ -21,10 +21,22 @@
         var ctx = c.getContext("2d");
         ctx.fillStyle = "#FF0000";
 
+        let flg = false;
 
+        c.onmouseup = () => {
+            flg = false;
+        }
+        c.onmousedown = () => {
+            flg = true;
+        }
         c.onmousemove = (e) => {
             // console.log(e.clientX);
-            ctx.fillRect(e.clientX - 25, e.clientY - 25, 50, 50);
+            if (flg === true) {
+                ctx.fillRect(e.clientX - 25, e.clientY - 25, 50, 50);
+            } else {
+                console.log("nothing ");
+            }
+
         }
 
     </script>
