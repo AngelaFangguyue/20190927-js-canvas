@@ -11,25 +11,112 @@
 
 <body>
     <!-- <div id="cva"></div>利用div模拟画板 -->
+    <!--canvas是行内元素，和image一样，可以直接设置宽高
+        然后css样式里设置的宽高会覆盖
+    -->
+    <canvas id="myCanvas" width="100" height="100"></canvas>
     <script>
+
+        var c = document.getElementById("myCanvas");
+        c.width = document.documentElement.clientWidth;
+        c.height = document.documentElement.clientHeight;
+
+        var ctx = c.getContext("2d");
+        ctx.fillStyle = "blue";
+        //fill()  stroke()方法是填充或者绘制
+        //属性.fillStyle .strokeStyle可以设置填充或者绘制的颜色
+        //设置线条宽度 lineWidth
+        ctx.lineWidth = 10;//html属性是不能加单位，且不用引号
+        //当线条粗了之后，发现有许多断齿，不连续，lineCap(注意老师在这个地方的调试，设置了两条线段，发现是折线处有问题，搜索line join，line end)
+        ctx.lineCap = "round";
+        let flg = false;
+        let pos;
+        //ctx.fillRect(0, 0, 150, 75);//这是利用canvas画了一个矩形，接着在鼠标点击的位置出现矩形
+        //在这里要注意画布canvas的宽高设置，首先是一个inline元素，
+        //而且和图片image一样，有margin
+        //是行内元素，所以设置display属性
+        //设置宽高和用户视野界面的宽高一样。
+        //但后面会发现问题，画的图形模糊，其实是canvas画板被拉伸的缘故
+        //所以要使用js动态获取屏幕的宽高，给canvas画板设置它的html属性，
+        //width和height。这个和图片一样，都可以直接设置它的html属性，宽和高，
+        //但是css设置的会将其覆盖
+
+        //同样设置在移动端，首先判断是PC还是移动
+        var isToch = "ontouchstart" in document.documentElement;
+        //若为移动，事件不同ontouchmove，另外获取坐标也不同，不一定是一个手指触摸
+        //另外要画线的话，还需要上一个坐标点，用用到ontouchstart事件
+        console.log("isToch", isToch);
+        if (isToch === true) {
+            console.log("111");
+            c.ontouchstart = (e) => {
+                console.log("1");
+                console.log(e.touches[0].clientX, e.touches[0].clientY);
+                pos = [e.touches[0].clientX, e.touches[0].clientY];
+            }
+            c.ontouchmove = (e) => {
+                console.log("2");
+                console.log(e.touches[0].clientX, e.touches[0].clientY);
+                drawLine(pos[0], pos[1], e.touches[0].clientX, e.touches[0].clientY);
+                pos = [e.touches[0].clientX, e.touches[0].clientY];
+            }
+        } else {
+            c.onmousemove = (e) => {
+                if (flg === true) {
+                    console.log(e.clientX, e.clientY);
+                    //ctx.beginPath();
+                    //ctx.arc(e.clientX, e.clientY, 10, 0, 2 * Math.PI);
+                    //ctx.fill();
+                    //将画圆改为画线
+                    drawLine(pos[0], pos[1], e.clientX, e.clientY);
+                    //实时更新上一个坐标点
+                    pos = [e.clientX, e.clientY];
+                }
+
+            }
+            //在点击的位置出现圆，onmousedown事件，但是要移动，就是onmousemove事件，
+            //按下开始画，松开停止，那就要结合用到onmouseup，onmousedown，onmousemove
+            //同时设置一个标志
+            c.onmousedown = (e) => {
+                flg = true;
+                pos = [e.clientX, e.clientY];
+            }
+            c.onmouseup = () => {
+                flg = false;
+            }
+        }
+        //但是速度快的话，就不连续了，所以应该是在前后两点之间画线，
+        //上一个地方的坐标就是起始坐标，要记录上一个点的坐标
+        //所以先写一个画线的函数
+        function drawLine(x1, y1, x2, y2) {
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
+
+
+
+
+
+
+
         // //这是鼠标的点击事件
         // //cva.onmousedown = (e) => {
         // //这是鼠标的移动事件
         // cva.onmousemove = (e) => {
         //     //console.log(e);
-        //     let divi = document.createElement("div");
-        //     divi.style.border = "1px solid purple";
-        //     divi.style.width = "10px";
-        //     divi.style.height = "10px";
-        //     divi.style.borderRadius = "5px";
-        //     divi.style.background = "black";
-        //     divi.style.position = "absolute";
-        //     divi.style.left = e.clientX + 'px';
-        //     divi.style.top = e.clientY + 'px';
-        //     divi.style.marginLeft = "-5px";
-        //     divi.style.marginTop = "-5px";
-        //     cva.appendChild(divi);
-        // }
+        //     let divi = document.createElement(" div"); 
+        // divi.style.border="1px solid purple" ; //
+        // divi.style.width = "10px"; 
+        // divi.style.height="10px" ; 
+        // divi.style.borderRadius="5px" ; 
+        // divi.style.background = "black"; 
+        // divi.style.position="absolute" ; 
+        // divi.style.left=e.clientX + 'px' ; 
+        // divi.style.top = e.clientY + 'px'; 
+        // divi.style.marginLeft="-5px" ; 
+        // divi.style.marginTop="-5px" ; 
+        // cva.appendChild(divi); // } 
 
     </script>
 </body>

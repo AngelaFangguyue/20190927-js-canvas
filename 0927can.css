@@ -3,7 +3,13 @@
     padding:0;
     box-sizing:border-box;
 }
-#cva{
+/* #cva{
     height: 100vh;
     border:1px solid green;
+} */
+#myCanvas{
+    display:block;
+    border:1px solid red;
+    height: 100vh;
+    width:100vw;
 }
